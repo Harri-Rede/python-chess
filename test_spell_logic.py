@@ -54,3 +54,14 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+            
+            
+class TestFreezeEffect:
+
+    def test_freeze_affects_opponent_not_caster(self):
+        game = SpellChessGame()
+        # White casts freeze
+        game.cast_freeze(chess.E5)
+        
+        # # The frozen color should be different from the caster's color
+        assert game.freeze_effect_color != game.current_turn()
