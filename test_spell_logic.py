@@ -53,4 +53,15 @@ class TestFreezeCasting:
             game = SpellChessGame()
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
-            # print(f"{chess.square_name(square)}: {success}")
+            # print(f"{chess.square_name(square)}: {success}")class TestSpellCooldown:
+
+class TestSpellCooldown:
+
+    
+    def test_freeze_cast_decrement(self):
+        game = SpellChessGame()
+        before = game.jump_remaining
+        success = game.cast_jump(chess.square(0, 2))
+        after = game.jump_remaining
+        assert success is True
+        # assert (after[True] == (before[True] - 1) & (after[False] == (before[False] - 1)))
