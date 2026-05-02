@@ -61,6 +61,7 @@ class TestSpellCooldown:
     def test_freeze_cast_decrement(self):
         game = SpellChessGame()
         before = game.freeze_remaining
-        game.cast_freeze(chess.square(0, 0))
+        success = game.cast_freeze(chess.square(0, 0))
         after = game.freeze_remaining
+        assert success == True
         assert (after[True] == (before[True] - 1) & (after[False] == (before[False] - 1)))
