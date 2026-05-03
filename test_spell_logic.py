@@ -74,6 +74,18 @@ class TestNewGameReset:
         #charge return to default values
         assert game.jump_remaining[chess.WHITE] == 3
         assert game.jump_remaining[chess.BLACK] == 3
+
+    def test_new_game_resets_all_spell_cooldowns(self):
+        game = SpellChessGame()
+        game.freeze_cooldown[chess.WHITE] = 2
+        game.freeze_cooldown[chess.BLACK] = 2
+        game.jump_cooldown[chess.WHITE] = 2
+        game.jump_cooldown[chess.BLACK] = 2
+        game.new_game()
+        assert game.freeze_cooldown[chess.WHITE] == 0;
+        assert game.freeze_cooldown[chess.BLACK] == 0;
+        assert game.jump_cooldown[chess.WHITE] == 0;
+        assert game.jump_cooldown[chess.BLACK] == 0;
         
     def test_freeze_includes_bordering_squares(self):
         for center in chess.SQUARES:
