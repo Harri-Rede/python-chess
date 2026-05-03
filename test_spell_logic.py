@@ -75,6 +75,12 @@ class TestNewGameReset:
         assert game.jump_remaining[chess.WHITE] == 3
         assert game.jump_remaining[chess.BLACK] == 3
 
+    def test_new_game_clears_freeze_effect(self):
+        game = SpellChessGame()
+        game.freeze_effect_color = chess.BLACK
+        game.new_game()
+        assert game.freeze_effect_color is None #after reset, should be not active
+        
     def test_new_game_resets_all_spell_cooldowns(self):
         game = SpellChessGame()
         game.freeze_cooldown[chess.WHITE] = 2
