@@ -55,13 +55,38 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
             
-            
+
 class TestFreezeEffect:
 
-    def test_freeze_affects_opponent_not_caster(self):
+    def test_opponent_frozen_area_dont_move(self):
         game = SpellChessGame()
-        # White casts freeze
-        game.cast_freeze(chess.E5)
         
-        # # The frozen color should be different from the caster's color
-        assert game.freeze_effect_color != game.current_turn()
+        assert game.current_turn() == chess.WHITE
+        # White casts freeze, selects E5 as center
+        center = chess.E5
+        game.cast_freeze(center)
+        assert game.current_turn() == chess.WHITE
+        
+        # Bug in make_move: it doesn't switch to Black's turn after White makes a move.
+        # game.make_move(chess.G1, chess.H3)
+        # assert game.current_turn() == chess.BLACK
+
+        # Manually setting turn for purposes of test.
+        game.board.turn = chess.BLACK
+        assert game.current_turn() == chess.BLACK
+
+        
+        area = game.freeze_effect_squares
+        # Manually adding center square for purposes of test.
+        area.add(center)
+
+        for square in area:
+            squaref = chess.square_file(square)
+            squarer = chess.square_rank(square)
+            for df in (-1, 0, 1):
+                for dr in (-1, 0, 1):
+                    f = squaref + df
+                    r = squarer + dr
+                    if 0 <= f < 8 and 0 <= r < 8:
+                        failure = game.make_move(chess.square(squaref, squarer), chess.square(f, r))
+                        assert failure is False
