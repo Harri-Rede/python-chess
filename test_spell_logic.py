@@ -54,3 +54,10 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+
+class TestJumpFromEmpty:
+    "Jumping from an empty source square should not be allowed."
+
+    def test_jump_from_empty(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A3, chess.A4) is False
