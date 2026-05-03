@@ -54,3 +54,34 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+
+class TestFreezeEffect:
+
+    def test_freeze_lasts_one_opp_turn(self):
+        game = SpellChessGame()
+
+        center = chess.E5
+        game.cast_freeze(center)
+
+        # Manually setting turn for purposes of test. Dependent on make_move.
+        game.board.turn = chess.BLACK
+
+        # Manually setting turn for purposes of test. Dependent on cast_freeze.
+        game.freeze_effect_color = chess.BLACK
+        assert game.freeze_effect_color == chess.BLACK
+        game.freeze_effect_plies_left = 1
+        assert game.freeze_effect_plies_left == 1
+        area = game.freeze_effect_squares
+        area.add(center)
+        assert center in area
+
+        assert game.current_turn() == chess.BLACK
+
+        # Need to call after_move_pushed() to switch turns since make_move() has a bug
+        move = game.prepare_move(chess.A1, chess.A2)
+        game.board.push(move)
+        game.after_move_pushed()
+        
+        assert game.freeze_effect_color is None
+        assert len(game.freeze_effect_squares) == 0
+        assert game.freeze_effect_plies_left == 0
