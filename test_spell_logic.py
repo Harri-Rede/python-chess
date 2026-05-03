@@ -54,3 +54,10 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+
+class TestJumpOpponentPiece:
+    "Caster cannot select an opponents piece as the source square."
+
+    def test_jump_source_cannot_be_opponent(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A8, chess.A6) is False
