@@ -54,3 +54,23 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+
+
+class TestFreezeEffect:
+
+    def test_freeze_no_moves(self):
+        game = SpellChessGame()
+        game.board.clear()
+        
+        game.board.set_piece_at(chess.E1, chess.Piece(chess.KING, chess.WHITE))
+        game.board.set_piece_at(chess.E8, chess.Piece(chess.KING, chess.BLACK))
+        game.board.set_piece_at(chess.B5, chess.Piece(chess.BISHOP, chess.BLACK))
+        game.board.turn = chess.BLACK
+        # print(game.get_legal_moves())
+
+        # Freeze white
+        game.cast_freeze(chess.E2)
+        game.freeze_effect_color = chess.WHITE
+
+        game.board.turn = chess.WHITE
+        assert len(game.get_legal_moves()) == 0
