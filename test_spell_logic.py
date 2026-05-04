@@ -55,6 +55,16 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+
+class TestSpellCooldown:
+
+    def test_freeze_cast_decrement(self):
+        game = SpellChessGame()
+        before = game.freeze_remaining
+        success = game.cast_freeze(chess.square(0, 0))
+        after = game.freeze_remaining
+        assert success == True
+        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
 class TestOncePerTurn:
 
     def test_freeze_once_per_turn(self):
