@@ -54,6 +54,7 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+     
 
 class TestJumpOpponentPiece:
     "Caster cannot select an opponents piece as the source square."
@@ -61,12 +62,14 @@ class TestJumpOpponentPiece:
     def test_jump_source_cannot_be_opponent(self):
         game = SpellChessGame()
         assert game.cast_jump(chess.A8, chess.A6) is False
+        
 class TestJumpFromEmpty:
     "Jumping from an empty source square should not be allowed."
 
     def test_jump_from_empty(self):
         game = SpellChessGame()
         assert game.cast_jump(chess.A3, chess.A4) is False
+        
 class TestJumpDestinationEmpty:
     "The jump destination for any valid piece must be empty."
 
@@ -80,6 +83,7 @@ class TestJumpDestinationEmpty:
         # set a black pawn within valid jumping distance of white pawn, and jump.
         game.board.set_piece_at(chess.A4, chess.Piece(chess.PAWN, chess.BLACK))
         assert game.cast_jump(chess.A2, chess.A4) is False
+        
 class TestFreezeEffect:
 
     def test_freeze_lasts_one_opp_turn(self):
@@ -110,6 +114,14 @@ class TestFreezeEffect:
         assert game.freeze_effect_color is None
         assert len(game.freeze_effect_squares) == 0
         assert game.freeze_effect_plies_left == 0
+        
+      def test_freeze_affects_opponent_not_caster(self):
+        game = SpellChessGame()
+        # White casts freeze
+        game.cast_freeze(chess.E5)
+        
+        # # The frozen color should be different from the caster's color
+        assert game.freeze_effect_color != game.current_turn()
         
 class TestNewGameReset:
 
