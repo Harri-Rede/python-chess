@@ -55,6 +55,36 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+class TestJumpInRange:
+    "Diagonal, horizontal, and vertical, jumps should all be allowed if they are in range and empty destination squares."
+
+    def test_one_diagonal_jump(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A2, chess.B3) is True
+    
+    def test_two_diagonal_jump(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A2, chess.C4) is True
+
+    def test_one_vertical_jump(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A2, chess.A3) is True
+    
+    def test_two_vertical_jump(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A2, chess.A4) is True
+    
+    def test_one_horizontal_jump(self):
+        game = SpellChessGame()
+        # remove the piece one to the right of the source square for valid jump.
+        game.board.remove_piece_at(chess.B2)
+        assert game.cast_jump(chess.A2, chess.B2) is True
+    
+    def test_two_horizontal_jump(self):
+        game = SpellChessGame()
+        # remove the piece two to the right of the source square for valid jump.
+        game.board.remove_piece_at(chess.C2)
+        assert game.cast_jump(chess.A2, chess.C2) is True
 class TestJumpOnOpponentKing:
     "Jump spell cannot be used to capture king."
 
