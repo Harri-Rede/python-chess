@@ -229,7 +229,7 @@ class TestFreezeEffect:
         assert game.current_turn() == chess.BLACK
 
         # Need to call after_move_pushed() to switch turns since make_move() has a bug
-        move = game.prepare_move(chess.A1, chess.A2)
+        move = game.prepare_move(chess.A7, chess.A6)
         game.board.push(move)
         game.after_move_pushed()
         
