@@ -64,4 +64,4 @@ class TestSpellCooldown:
         success = game.cast_freeze(chess.square(0, 0))
         after = game.freeze_remaining
         assert success == True
-        assert (after[True] == (before[True] - 1) & (after[False] == (before[False] - 1)))
+        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
