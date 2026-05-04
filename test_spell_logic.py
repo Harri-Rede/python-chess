@@ -199,10 +199,10 @@ class TestJumpCooldown:
         game1.jump_cooldown[True] = 1
         game2.jump_cooldown[True] = 0
 
+        game1.on_turn_start()
+        game2.on_turn_start()
+        
         one = game1.jump_cooldown[True]
         two = game2.jump_cooldown[True]
 
-        game1.on_turn_start()
-        game2.on_turn_start()
-
-        assert (one == 1) & (two == 0)
+        assert (one == 0) & (two == 0)
