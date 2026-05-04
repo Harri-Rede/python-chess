@@ -405,6 +405,3 @@ class TestJumpCooldown:
         success = game.cast_jump(chess.A2, chess.A4)
         end = game.jump_cooldown[True]
         assert (start == 0) & success & (end == 2)
-
-
-        assert (not failiure1) & (not failiure2) & success
