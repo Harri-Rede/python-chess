@@ -54,3 +54,24 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+
+class TestFreezeEffect:
+
+    def test_frozen_check_block_no_select(self):
+        game = SpellChessGame()
+        game.board.clear()
+        
+        # https://www.chess.com/terms/check-chess
+        game.board.set_piece_at(chess.E1, chess.Piece(chess.KING, chess.WHITE))
+        game.board.set_piece_at(chess.E8, chess.Piece(chess.KING, chess.BLACK))
+        game.board.set_piece_at(chess.B5, chess.Piece(chess.BISHOP, chess.WHITE))
+        game.board.turn = chess.BLACK
+        assert game.board.is_check() is True
+
+        # Freeze bishop
+        game.cast_freeze(chess.B5)
+        game.freeze_effect_squares.add(chess.B5)  # Dependent on squares_in_3x3 - bug
+        game.freeze_effect_color = chess.WHITE
+
+        assert game.is_frozen(chess.B5, chess.WHITE) is True
+        assert game.board.is_check() is True
