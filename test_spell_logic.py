@@ -64,4 +64,4 @@ class TestSpellCooldown:
         success = game.cast_jump(chess.square(0, 0), chess.square(0, 2))
         after = game.jump_remaining
         assert success is True
-        assert (after[True] == (before[True] - 1) & (after[False] == (before[False] - 1)))
+        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
