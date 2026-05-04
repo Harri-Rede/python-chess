@@ -78,6 +78,22 @@ class TestSpellCooldown:
         after = game.freeze_remaining
         assert success == True
         assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
+
+    def test_freeze_castable_only_on_zero(self):
+        game1 = SpellChessGame()
+        game2 = SpellChessGame()
+        game3 = SpellChessGame()
+
+        game1.freeze_cooldown[True] = 2
+        game2.freeze_cooldown[True] = 1
+        game3.freeze_cooldown[True] = 0
+
+        failiure1 = game1.cast_freeze(chess.E5)
+        failiure2 = game2.cast_freeze(chess.E5)
+        success = game3.cast_freeze(chess.E5)
+
+        assert (not failiure1) & (not failiure2) & success
+        
 class TestOncePerTurn:
 
     def test_freeze_once_per_turn(self):
@@ -389,19 +405,6 @@ class TestJumpCooldown:
         success = game.cast_jump(chess.A2, chess.A4)
         end = game.jump_cooldown[True]
         assert (start == 0) & success & (end == 2)
-class TestFreezeCooldown:
 
-    def test_freeze_castable_only_on_zero(self):
-        game1 = SpellChessGame()
-        game2 = SpellChessGame()
-        game3 = SpellChessGame()
-
-        game1.freeze_cooldown[True] = 2
-        game2.freeze_cooldown[True] = 1
-        game3.freeze_cooldown[True] = 0
-
-        failiure1 = game1.cast_freeze(chess.E5)
-        failiure2 = game2.cast_freeze(chess.E5)
-        success = game3.cast_freeze(chess.E5)
 
         assert (not failiure1) & (not failiure2) & success
