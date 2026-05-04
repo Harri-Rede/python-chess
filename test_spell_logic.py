@@ -401,6 +401,7 @@ class TestJumpCooldown:
         success = game2.cast_jump(chess.A2, chess.A4)
 
         assert (not failiure) & success
+        
     def test_jump_cooldown_decrement(self):
 
         game1 = SpellChessGame()
@@ -423,3 +424,21 @@ class TestJumpCooldown:
         success = game.cast_jump(chess.A2, chess.A4)
         end = game.jump_cooldown[True]
         assert (start == 0) & success & (end == 2)
+
+class TestSpellCooldown:
+
+    def test_freeze_cast_decrement(self):
+        game = SpellChessGame()
+        before = game.freeze_remaining
+        success = game.cast_freeze(chess.square(0, 0))
+        after = game.freeze_remaining
+        assert success == True
+        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
+    
+    def test_jump_cast_decrement(self):
+        game = SpellChessGame()
+        before = game.jump_remaining
+        success = game.cast_jump(chess.A2, chess.A4)
+        after = game.jump_remaining
+        assert success == True
+        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
