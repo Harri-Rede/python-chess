@@ -71,28 +71,7 @@ class TestFreezeCasting:
             
 class TestSpellCooldown:
 
-    def test_freeze_cast_decrement(self):
-        game = SpellChessGame()
-        before = game.freeze_remaining
-        success = game.cast_freeze(chess.square(0, 0))
-        after = game.freeze_remaining
-        assert success == True
-        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
-
-    def test_freeze_castable_only_on_zero(self):
-        game1 = SpellChessGame()
-        game2 = SpellChessGame()
-        game3 = SpellChessGame()
-
-        game1.freeze_cooldown[True] = 2
-        game2.freeze_cooldown[True] = 1
-        game3.freeze_cooldown[True] = 0
-
-        failiure1 = game1.cast_freeze(chess.E5)
-        failiure2 = game2.cast_freeze(chess.E5)
-        success = game3.cast_freeze(chess.E5)
-
-        assert (not failiure1) & (not failiure2) & success
+    
         
 class TestOncePerTurn:
 
@@ -369,6 +348,49 @@ class TestFreezeCooldown:
         success = game.cast_freeze(chess.E5)
         end = game.freeze_cooldown[True]
         assert (start == 0) & success & (end == 3)
+
+    def test_freeze_cast_decrement(self):
+        game = SpellChessGame()
+        before = game.freeze_remaining
+        success = game.cast_freeze(chess.square(0, 0))
+        after = game.freeze_remaining
+        assert success == True
+        assert (after[True] == (before[True] - 1) & (after[False] == before[False]))
+
+    def test_freeze_castable_only_on_zero(self):
+        game1 = SpellChessGame()
+        game2 = SpellChessGame()
+        game3 = SpellChessGame()
+
+        game1.freeze_cooldown[True] = 2
+        game2.freeze_cooldown[True] = 1
+        game3.freeze_cooldown[True] = 0
+
+        failiure1 = game1.cast_freeze(chess.E5)
+        failiure2 = game2.cast_freeze(chess.E5)
+        success = game3.cast_freeze(chess.E5)
+
+        assert (not failiure1) & (not failiure2) & success
+
+    def test_freeze_cooldown_decrement(self):
+        game1 = SpellChessGame()
+        game2 = SpellChessGame()
+        game3 = SpellChessGame()
+
+        game1.freeze_cooldown[True] = 2
+        game2.freeze_cooldown[True] = 1
+        game3.freeze_cooldown[True] = 0
+
+        game1.on_turn_start()
+        game2.on_turn_start()
+        game3.on_turn_start()
+
+        one = game1.freeze_cooldown[True]
+        two = game2.freeze_cooldown[True]
+        three = game3.freeze_cooldown[True]
+
+        assert (one == 1) & (two == 0) & (three == 0)
+    
 class TestJumpCooldown:
 
     def test_jump_castable_only_on_zero(self):
