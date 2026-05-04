@@ -55,9 +55,73 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+class TestJumpOpponentPiece:
+    "Caster cannot select an opponents piece as the source square."
 
+    def test_jump_source_cannot_be_opponent(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A8, chess.A6) is False
+        
+class TestJumpFromEmpty:
+    "Jumping from an empty source square should not be allowed."
+
+    def test_jump_from_empty(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.A3, chess.A4) is False
+        
+class TestJumpDestinationEmpty:
+    "The jump destination for any valid piece must be empty."
+
+    def test_jump_on_own_piece(self):
+        game = SpellChessGame()
+        # white pawn jump on white pawn should reject
+        assert game.cast_jump(chess.A2, chess.C2) is False
+
+    def test_jump_on_opponent_piece(self):
+        game = SpellChessGame()
+        # set a black pawn within valid jumping distance of white pawn, and jump.
+        game.board.set_piece_at(chess.A4, chess.Piece(chess.PAWN, chess.BLACK))
+        assert game.cast_jump(chess.A2, chess.A4) is False
+        
 class TestFreezeEffect:
 
+    def test_freeze_lasts_one_opp_turn(self):
+        game = SpellChessGame()
+
+        center = chess.E5
+        game.cast_freeze(center)
+
+        # Manually setting turn for purposes of test. Dependent on make_move.
+        game.board.turn = chess.BLACK
+
+        # Manually setting turn for purposes of test. Dependent on cast_freeze.
+        game.freeze_effect_color = chess.BLACK
+        assert game.freeze_effect_color == chess.BLACK
+        game.freeze_effect_plies_left = 1
+        assert game.freeze_effect_plies_left == 1
+        area = game.freeze_effect_squares
+        area.add(center)
+        assert center in area
+
+        assert game.current_turn() == chess.BLACK
+
+        # Need to call after_move_pushed() to switch turns since make_move() has a bug
+        move = game.prepare_move(chess.A1, chess.A2)
+        game.board.push(move)
+        game.after_move_pushed()
+        
+        assert game.freeze_effect_color is None
+        assert len(game.freeze_effect_squares) == 0
+        assert game.freeze_effect_plies_left == 0
+        
+    def test_freeze_affects_opponent_not_caster(self):
+        game = SpellChessGame()
+        # White casts freeze
+        game.cast_freeze(chess.E5)
+        
+        # # The frozen color should be different from the caster's color
+        assert game.freeze_effect_color != game.current_turn()
+        
     def test_freeze_no_moves(self):
         game = SpellChessGame()
         game.board.clear()
@@ -74,3 +138,69 @@ class TestFreezeEffect:
 
         game.board.turn = chess.WHITE
         assert len(game.get_legal_moves()) == 0
+        
+class TestNewGameReset:
+
+    def test_new_game_resets_freeze_charges(self):
+        game = SpellChessGame()
+        game.freeze_remaining[chess.WHITE] = 2
+        game.freeze_remaining[chess.BLACK] = 1
+        game.new_game() #resets the game
+        #charge return to default values
+        assert game.freeze_remaining[chess.WHITE] == 5
+        assert game.freeze_remaining[chess.BLACK] == 5
+
+    def test_new_game_resets_jump_charges(self):
+        game = SpellChessGame()
+        game.jump_remaining[chess.WHITE] = 1
+        game.jump_remaining[chess.BLACK] = 0
+        game.new_game()
+        #charge return to default values
+        assert game.jump_remaining[chess.WHITE] == 3
+        assert game.jump_remaining[chess.BLACK] == 3
+
+    def test_new_game_clears_freeze_effect(self):
+        game = SpellChessGame()
+        game.freeze_effect_color = chess.BLACK
+        game.new_game()
+        assert game.freeze_effect_color is None #after reset, should be not active
+        
+    def test_new_game_resets_all_spell_cooldowns(self):
+        game = SpellChessGame()
+        game.freeze_cooldown[chess.WHITE] = 2
+        game.freeze_cooldown[chess.BLACK] = 2
+        game.jump_cooldown[chess.WHITE] = 2
+        game.jump_cooldown[chess.BLACK] = 2
+        game.new_game()
+        assert game.freeze_cooldown[chess.WHITE] == 0;
+        assert game.freeze_cooldown[chess.BLACK] == 0;
+        assert game.jump_cooldown[chess.WHITE] == 0;
+        assert game.jump_cooldown[chess.BLACK] == 0;
+        
+    def test_freeze_includes_bordering_squares(self):
+        for center in chess.SQUARES:
+            # print(f"Test {chess.square_rank(center)} {chess.square_file(center)} {chess.square_name(center)}")
+            square = squares_in_3x3(center)
+            for s in square:
+                dist = chess.square_distance(center, s)
+                assert dist <= 1
+
+    def test_freeze_includes_center(self):
+        for square in chess.SQUARES:
+            area = squares_in_3x3(square)
+            # print(f"{chess.square_name(square)}")
+            assert square in area
+            
+class TestKingJump:
+    "The king cannot be selected for use with jump spell."
+
+    def test_king_cannot_jump(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.E1, chess.E3) is False
+        
+class TestJumpRange:
+    "Chebyshev distance 3 should be rejected."
+
+    def test_over_chebyshev_range(self):
+        game = SpellChessGame()
+        assert game.cast_jump(chess.B1, chess.B4) is False
