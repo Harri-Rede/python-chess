@@ -69,10 +69,6 @@ class TestFreezeCasting:
             # print(f"{chess.square_name(square)}")
             assert square in area
             
-class TestSpellCooldown:
-
-    
-        
 class TestOncePerTurn:
 
     def test_freeze_once_per_turn(self):
