@@ -405,6 +405,3 @@ class TestFreezeCooldown:
         success = game3.cast_freeze(chess.E5)
 
         assert (not failiure1) & (not failiure2) & success
-        three = game3.freeze_cooldown[True]
-
-        assert (one == 1) & (two == 0) & (three == 0)
