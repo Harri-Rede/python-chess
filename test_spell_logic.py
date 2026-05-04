@@ -115,7 +115,7 @@ class TestFreezeEffect:
         assert len(game.freeze_effect_squares) == 0
         assert game.freeze_effect_plies_left == 0
         
-      def test_freeze_affects_opponent_not_caster(self):
+    def test_freeze_affects_opponent_not_caster(self):
         game = SpellChessGame()
         # White casts freeze
         game.cast_freeze(chess.E5)
