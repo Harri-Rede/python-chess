@@ -334,10 +334,23 @@ class TestJumpRange:
         game = SpellChessGame()
         assert game.cast_jump(chess.B1, chess.B4) is False
 
-
-
-
 class TestJumpCooldown:
+
+    def test_jump_cooldown_decrement(self):
+
+        game1 = SpellChessGame()
+        game2 = SpellChessGame()
+
+        game1.jump_cooldown[True] = 1
+        game2.jump_cooldown[True] = 0
+
+        game1.on_turn_start()
+        game2.on_turn_start()
+        
+        one = game1.jump_cooldown[True]
+        two = game2.jump_cooldown[True]
+
+        assert (one == 0) & (two == 0)
 
     def test_jump_cooldown(self):
         game = SpellChessGame()
