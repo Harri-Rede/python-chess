@@ -72,21 +72,13 @@ class TestFreezeEffect:
         # assert game.current_turn() == chess.BLACK
 
         # Manually setting turn for purposes of test.
+        game.freeze_effect_color = chess.BLACK
         game.board.turn = chess.BLACK
         assert game.current_turn() == chess.BLACK
-
-        
         area = game.freeze_effect_squares
         # Manually adding center square for purposes of test.
         area.add(center)
 
-        for square in area:
-            squaref = chess.square_file(square)
-            squarer = chess.square_rank(square)
-            for df in (-1, 0, 1):
-                for dr in (-1, 0, 1):
-                    f = squaref + df
-                    r = squarer + dr
-                    if 0 <= f < 8 and 0 <= r < 8:
-                        failure = game.make_move(chess.square(squaref, squarer), chess.square(f, r))
-                        assert failure is False
+        moves = game.get_legal_moves()
+        for move in moves:
+            assert not game.is_frozen(move.from_square, chess.BLACK)
