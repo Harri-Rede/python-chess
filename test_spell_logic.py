@@ -55,6 +55,23 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+class TestJumpCannotObtainCheckmatePosition:
+    "The jump spell cannot be used to obtain a checkmate position at the destination square"
+
+    def test_jump_cannot_obtain_checkmate_position(self):
+        game = SpellChessGame()
+        # set up the board for checkmate position prior to jump, then jump
+        game.board.clear()
+        game.board.set_piece_at(chess.H8, chess.Piece(chess.KING, chess.BLACK))
+        game.board.set_piece_at(chess.A1, chess.Piece(chess.KING, chess.WHITE))
+        game.board.set_piece_at(chess.H7, chess.Piece(chess.PAWN, chess.BLACK))
+        game.board.set_piece_at(chess.G1, chess.Piece(chess.ROOK, chess.WHITE))
+        game.board.set_piece_at(chess.F7, chess.Piece(chess.QUEEN, chess.WHITE))
+        # ensure game state is currently NOT in check or checkmate
+        assert game.board.is_check() is False
+        assert game.board.is_checkmate() is False
+        # then jump, should reject
+        assert game.cast_jump(chess.F7, chess.G8) is False
 class TestJumpInRange:
     "Diagonal, horizontal, and vertical, jumps should all be allowed if they are in range and empty destination squares."
 
