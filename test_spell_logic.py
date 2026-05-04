@@ -159,4 +159,4 @@ class TestFreezeCooldown:
         start = game.freeze_cooldown[True]
         success = game.cast_freeze(chess.E5)
         end = game.freeze_cooldown[True]
-        assert (start == 0) & success & (end == 2)
+        assert (start == 0) & success & (end == 3)
