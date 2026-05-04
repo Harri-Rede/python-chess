@@ -55,7 +55,20 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+    def test_freeze_includes_bordering_squares(self):
+        for center in chess.SQUARES:
+            # print(f"Test {chess.square_rank(center)} {chess.square_file(center)} {chess.square_name(center)}")
+            square = squares_in_3x3(center)
+            for s in square:
+                dist = chess.square_distance(center, s)
+                assert dist <= 1
 
+    def test_freeze_includes_center(self):
+        for square in chess.SQUARES:
+            area = squares_in_3x3(square)
+            # print(f"{chess.square_name(square)}")
+            assert square in area
+            
 class TestSpellCooldown:
 
     def test_freeze_cast_decrement(self):
@@ -92,19 +105,7 @@ class TestOncePerTurn:
         success = game2.make_move(chess.A2, chess.A4)
         failiure = game2.cast_jump(chess.A4, chess.A5)
         assert success & (not failiure)
-    def test_freeze_includes_bordering_squares(self):
-        for center in chess.SQUARES:
-            # print(f"Test {chess.square_rank(center)} {chess.square_file(center)} {chess.square_name(center)}")
-            square = squares_in_3x3(center)
-            for s in square:
-                dist = chess.square_distance(center, s)
-                assert dist <= 1
-
-    def test_freeze_includes_center(self):
-        for square in chess.SQUARES:
-            area = squares_in_3x3(square)
-            # print(f"{chess.square_name(square)}")
-            assert square in area
+    
 
 class TestJumpCannotObtainCheckmatePosition:
     "The jump spell cannot be used to obtain a checkmate position at the destination square"
