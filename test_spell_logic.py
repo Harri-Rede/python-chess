@@ -54,3 +54,12 @@ class TestFreezeCasting:
             success = game.cast_freeze(square)  # returns True if cast succeeded
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
+
+class TestJumpOnOpponentKing:
+    "Jump spell cannot be used to capture king."
+
+    def test_jump_on_opponent_king(self):
+        game = SpellChessGame()
+        # set a white pawn within jump range of the black king, and jump
+        game.board.set_piece_at(chess.E6, chess.Piece(chess.PAWN, chess.WHITE))
+        assert game.cast_jump(chess.E6, chess.E8) is False
