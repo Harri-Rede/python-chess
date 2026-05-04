@@ -176,3 +176,15 @@ class TestJumpRange:
     def test_over_chebyshev_range(self):
         game = SpellChessGame()
         assert game.cast_jump(chess.B1, chess.B4) is False
+
+
+
+
+class TestJumpCooldown:
+
+    def test_jump_cooldown(self):
+        game = SpellChessGame()
+        start = game.jump_cooldown[True]
+        success = game.cast_jump(chess.A2, chess.A4)
+        end = game.jump_cooldown[True]
+        assert (start == 0) & success & (end == 1)
