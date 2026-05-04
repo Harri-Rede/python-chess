@@ -336,6 +336,18 @@ class TestJumpRange:
 
 class TestJumpCooldown:
 
+    def test_jump_castable_only_on_zero(self):
+
+        game1 = SpellChessGame()
+        game2 = SpellChessGame()
+        
+        game1.jump_cooldown[True] = 1
+        game2.jump_cooldown[True] = 0
+
+        failiure = game1.cast_jump(chess.A2, chess.A4)
+        success = game2.cast_jump(chess.A2, chess.A4)
+
+        assert (not failiure) & success
     def test_jump_cooldown_decrement(self):
 
         game1 = SpellChessGame()
