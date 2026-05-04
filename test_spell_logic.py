@@ -55,6 +55,33 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+class TestOncePerTurn:
+
+    def test_freeze_once_per_turn(self):
+        # Checks if you can cast more than one freeze on a turn.
+        game1 = SpellChessGame()
+        success = game1.cast_freeze(chess.E5)
+        failiure = game1.cast_freeze(chess.E5)
+        assert success & (not failiure)
+
+        # Checks if you can cast a freeze spell after moving.
+        game2 = SpellChessGame()
+        success = game2.make_move(chess.A2, chess.A4)
+        failiure = game2.cast_freeze(chess.E5)
+        assert success & (not failiure)
+    
+    def test_jump_once_per_turn(self):
+        # Checks if you can cast more than one jump on a turn.
+        game1 = SpellChessGame()
+        success = game1.cast_jump(chess.A2, chess.A4)
+        failiure = game1.cast_jump(chess.A4, chess.A5)
+        assert success & (not failiure)
+
+        # Checks if you can cast a jump spell after moving.
+        game2 = SpellChessGame()
+        success = game2.make_move(chess.A2, chess.A4)
+        failiure = game2.cast_jump(chess.A4, chess.A5)
+        assert success & (not failiure)
     def test_freeze_includes_bordering_squares(self):
         for center in chess.SQUARES:
             # print(f"Test {chess.square_rank(center)} {chess.square_file(center)} {chess.square_name(center)}")
