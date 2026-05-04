@@ -188,3 +188,18 @@ class TestJumpRange:
     def test_over_chebyshev_range(self):
         game = SpellChessGame()
         assert game.cast_jump(chess.B1, chess.B4) is False
+
+class TestJumpCooldown:
+
+    def test_jump_castable_only_on_zero(self):
+
+        game1 = SpellChessGame()
+        game2 = SpellChessGame()
+        
+        game1.jump_cooldown[True] = 1
+        game2.jump_cooldown[True] = 0
+
+        failiure = game1.cast_jump(chess.A2, chess.A4)
+        success = game2.cast_jump(chess.A2, chess.A4)
+
+        assert (not failiure) & success
