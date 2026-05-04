@@ -187,4 +187,4 @@ class TestJumpCooldown:
         start = game.jump_cooldown[True]
         success = game.cast_jump(chess.A2, chess.A4)
         end = game.jump_cooldown[True]
-        assert (start == 0) & success & (end == 1)
+        assert (start == 0) & success & (end == 2)
