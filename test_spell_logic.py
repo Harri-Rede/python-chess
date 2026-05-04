@@ -55,6 +55,20 @@ class TestFreezeCasting:
             assert success is True
             # print(f"{chess.square_name(square)}: {success}")
 
+    def test_freeze_includes_bordering_squares(self):
+        for center in chess.SQUARES:
+            # print(f"Test {chess.square_rank(center)} {chess.square_file(center)} {chess.square_name(center)}")
+            square = squares_in_3x3(center)
+            for s in square:
+                dist = chess.square_distance(center, s)
+                assert dist <= 1
+
+    def test_freeze_includes_center(self):
+        for square in chess.SQUARES:
+            area = squares_in_3x3(square)
+            # print(f"{chess.square_name(square)}")
+            assert square in area
+
 class TestJumpCannotObtainCheckmatePosition:
     "The jump spell cannot be used to obtain a checkmate position at the destination square"
 
@@ -278,20 +292,6 @@ class TestNewGameReset:
         assert game.freeze_cooldown[chess.BLACK] == 0;
         assert game.jump_cooldown[chess.WHITE] == 0;
         assert game.jump_cooldown[chess.BLACK] == 0;
-        
-    def test_freeze_includes_bordering_squares(self):
-        for center in chess.SQUARES:
-            # print(f"Test {chess.square_rank(center)} {chess.square_file(center)} {chess.square_name(center)}")
-            square = squares_in_3x3(center)
-            for s in square:
-                dist = chess.square_distance(center, s)
-                assert dist <= 1
-
-    def test_freeze_includes_center(self):
-        for square in chess.SQUARES:
-            area = squares_in_3x3(square)
-            # print(f"{chess.square_name(square)}")
-            assert square in area
             
 class TestKingJump:
     "The king cannot be selected for use with jump spell."
