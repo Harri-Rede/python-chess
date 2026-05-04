@@ -400,12 +400,11 @@ class TestFreezeCooldown:
         game2.freeze_cooldown[True] = 1
         game3.freeze_cooldown[True] = 0
 
-        game1.on_turn_start()
-        game2.on_turn_start()
-        game3.on_turn_start()
+        failiure1 = game1.cast_freeze(chess.E5)
+        failiure2 = game2.cast_freeze(chess.E5)
+        success = game3.cast_freeze(chess.E5)
 
-        one = game1.freeze_cooldown[True]
-        two = game2.freeze_cooldown[True]
+        assert (not failiure1) & (not failiure2) & success
         three = game3.freeze_cooldown[True]
 
         assert (one == 1) & (two == 0) & (three == 0)
