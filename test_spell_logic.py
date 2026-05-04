@@ -75,3 +75,4 @@ class TestFreezeEffect:
 
         assert game.is_frozen(chess.B5, chess.WHITE) is True
         assert game.board.is_check() is True
+        assert game.board.piece_at(chess.B5) is not None
