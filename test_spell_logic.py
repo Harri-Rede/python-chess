@@ -239,8 +239,8 @@ class TestFreezeEffect:
         
     def test_freeze_affects_opponent_not_caster(self):
         game = SpellChessGame()
-        
-        # # The frozen color should be different from the caster's color
+        # White casts freeze
+        game.cast_freeze(chess.E5)
         assert game.freeze_effect_color != game.current_turn()
 
         game2 = SpellChessGame()
